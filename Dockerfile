@@ -1,0 +1,23 @@
+FROM python:3.12-slim
+
+ARG AQUACLEAN_VERSION=v3.1.2
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN git clone \
+      --depth 1 \
+      --branch "${AQUACLEAN_VERSION}" \
+      https://github.com/jens62/geberit-aquaclean.git \
+      /app \
+    && pip install --no-cache-dir .
+
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1
+
+EXPOSE 8080
+
+CMD ["python", "-m", "aquaclean_console_app", "--mode", "api"]
