@@ -3,7 +3,7 @@ FROM python:3.12-slim
 ARG AQUACLEAN_VERSION=v3.1.2
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y git \
+    && apt-get install --no-install-recommends -y git curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
