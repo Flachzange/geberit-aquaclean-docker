@@ -1,5 +1,6 @@
 FROM python:3.12-slim
 
+ARG AQUACLEAN_REPO=https://github.com/jens62/geberit-aquaclean.git
 ARG AQUACLEAN_VERSION=v3.1.2
 
 RUN apt-get update \
@@ -11,7 +12,7 @@ WORKDIR /app
 RUN git clone \
       --depth 1 \
       --branch "${AQUACLEAN_VERSION}" \
-      https://github.com/jens62/geberit-aquaclean.git \
+      "${AQUACLEAN_REPO}" \
       /app \
     && pip install --no-cache-dir .
 
