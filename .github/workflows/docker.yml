@@ -2,6 +2,12 @@ name: Build Docker images
 
 on:
   workflow_dispatch:
+    inputs:
+      aquaclean_sha:
+        description: AquaClean source commit for dev build
+        required: false
+        type: string
+
   push:
     branches:
       - main
@@ -45,6 +51,27 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:v3.1.2
 
+      - name: Resolve dev source commit
+        id: dev_source
+        shell: bash
+        run: |
+          SHA="${{ github.event.inputs.aquaclean_sha }}"
+
+          if [ -z "$SHA" ]; then
+            SHA="$(git ls-remote https://github.com/Flachzange/geberit-aquaclean.git refs/heads/dev | cut -f1)"
+          fi
+
+          if [ -z "$SHA" ]; then
+            echo "ERROR: Could not determine AquaClean dev commit"
+            exit 1
+          fi
+
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${SHA:0:12}" >> "$GITHUB_OUTPUT"
+
+          echo "Building AquaClean dev commit:"
+          echo "$SHA"
+
       - name: Build test image
         uses: docker/build-push-action@v6
         with:
@@ -54,5 +81,11 @@ jobs:
           build-args: |
             AQUACLEAN_REPO=https://github.com/Flachzange/geberit-aquaclean.git
             AQUACLEAN_VERSION=dev
+            AQUACLEAN_COMMIT=${{ steps.dev_source.outputs.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/Flachzange/geberit-aquaclean
+            org.opencontainers.image.revision=${{ steps.dev_source.outputs.sha }}
+            org.opencontainers.image.version=dev-${{ steps.dev_source.outputs.short_sha }}
           tags: |
             ${{ env.IMAGE_NAME }}:dev
+            ${{ env.IMAGE_NAME }}:dev-${{ steps.dev_source.outputs.short_sha }}
