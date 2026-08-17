@@ -53,6 +53,6 @@ jobs:
           platforms: linux/amd64
           build-args: |
             AQUACLEAN_REPO=https://github.com/Flachzange/geberit-aquaclean.git
-            AQUACLEAN_VERSION=fix/on-demand-mqtt-routing
+            AQUACLEAN_VERSION=dev
           tags: |
             ${{ env.IMAGE_NAME }}:dev
