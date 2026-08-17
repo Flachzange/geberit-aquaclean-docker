@@ -55,4 +55,4 @@ jobs:
             AQUACLEAN_REPO=https://github.com/Flachzange/geberit-aquaclean.git
             AQUACLEAN_VERSION=fix/on-demand-mqtt-routing
           tags: |
-            ${{ env.IMAGE_NAME }}:on-demand-fix
+            ${{ env.IMAGE_NAME }}:dev
