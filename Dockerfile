@@ -25,7 +25,7 @@ RUN if [ -n "${AQUACLEAN_COMMIT}" ]; then \
     && ACTUAL_COMMIT="$(git -C /app rev-parse HEAD)" \
     && echo "${ACTUAL_COMMIT}" > /app/.aquaclean-commit \
     && echo "AquaClean source commit: ${ACTUAL_COMMIT}" \
-    && pip install --no-cache-dir .
+    && pip install --no-cache-dir ".[esphome]"
 
 ENV PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
